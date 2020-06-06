@@ -4,6 +4,37 @@ library(httr)
 library(jsonlite)
 library(lubridate)
 
+# save token and dev_id in a config file (YAML or ini)
+
+#### Utility Functions ####
+# 1) composeRequestString is called and the API requirements are satisfied
+# 2) determineParams is called inside composeRequestString and uses the endpoint to determine how to structure
+#    the request string
+# 3) sendRequest is called with the request string (here we can monitor the API better)
+
+# sendRequest <- function(request_string) {
+#   
+#   response <- fromJSON(request_string)
+#   
+#   return(response)
+# }
+# 
+
+# determineParams(endpoint) {
+#   return(NULL)
+# }
+
+# composeRequestString(dev_id, token, endpoint) {
+# 
+#   time_stamp <- getTimestamp()
+#   signature <- getSignature(dev_id, endpoint, token, time_stamp)
+#   base_url <- "http://api.smitegame.com/smiteapi.svc"
+# 
+#   method_string <- ""
+#   
+#   return(method_string)
+# }
+
 getTimestamp <- function() {
   Year <- year(as.character(Sys.Date()))
   Month <- month(as.character(Sys.Date()))
@@ -33,10 +64,19 @@ getSignature <- function (dev_id, endpoint, token, time_stamp) {
   return(signature)
 }
 
+#### Connectivity, Development, and System Status ####
+ping <- function(output_type = "json") {
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  response <- fromJSON(paste(base_url, paste0("ping", output_type), sep = "/"))
+  
+  return(response)
+}
+
 createSession <- function (token, dev_id, output_type = "json") {
   
-  token <- token #"A6F6D070221E4CAC8E360A02454CB8C3"
-  dev_id <- dev_id #"2122"
+  #token <- "A6F6D070221E4CAC8E360A02454CB8C3"
+  #dev_id <- "2122"
   time_stamp <- getTimestamp()
   
   endpoint <- "createsession"
@@ -52,6 +92,253 @@ createSession <- function (token, dev_id, output_type = "json") {
   return(session)
 }
 
-getPlayer <- function(token, dev_id, session) {
+testSession <- function(token, dev_id, session, output_type = "json") {
   
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "testsession"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getDataUsed <- function(token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getdataused"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getHirezServerStatus <- function(token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "gethirezserverstatus"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getPatchInfo <- function(token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getpatchinfo"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+#### Gods and Items ####
+
+getGods <- function(token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getgods"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, "1", sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+#### Players and Playerids ####
+
+getPlayer <- function(player, token, dev_id, session, portal_id = "10", output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getplayer"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player, portal_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+#### Playerid Info ####
+
+getPlayerAchievements <- function(player_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getplayerachievements"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getGodRanks <- function(player_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getgodranks"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getMatchHistory <- function(player_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getmatchhistory"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+#### Match Info ####
+
+getMatchIdsByQueue <- function(queue, token, dev_id, session, date, hour, minute = NULL, output_type = "json") {
+  
+  # acceptable hour values 0-23 and -1 (whole day)
+  # date format needed yyyymmdd
+  # minute comes in the form ",00" - ",50"
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getmatchidsbyqueue"
+  signature <- getsignature(dev_id, endpoint, token, time_stamp)
+  
+  queues <- c("445", "426", "448", "435", "466", "434", "459")
+  names(queues) <- c("assault", "conquest", "joust", "arena", "clash", "motd", "siege")
+  
+  if(!is.null(minute)) {
+    minute <- paste0(",", minute)
+  }
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0("getmatchidsbyqueue", output_type), 
+                         dev_id, signature, session, time_stamp, queues[queue], date, paste0(hour, minute), 
+                         sep = "/")
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getMatchDetails <- function(match_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getmatchdetails"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, match_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getMatchDetailsBatch <- function(match_id_vec, token, dev_id, session, output_type = "json") {
+  
+  # please limit csv paramater to 5-10 matches
+  stopifnot(length(match_id_vec) <= 10)
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getmatchdetailsbatch"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  csv_match_id <- paste(match_id_vec, collapse = ",")
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, csv_match_id, sep = "/")
+  print(method_string)
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+#### Leagues, Seasons, and Rounds ####
+#### Team Info ####
+#### Other ####
+
+
+searchTeams <- function() {
+  return(NULL)
+}
+
+getTeamDetails <- function() {
+  return(NULL)
+}
+
+getTeamPlayers <- function() {
+  return(NULL)
+}
+
+getQueueStats <- function() {
+  return(NULL)
+}
+
+searchPlayer <- function() {
+  return(NULL)
 }
