@@ -182,6 +182,55 @@ getGods <- function(token, dev_id, session, output_type = "json") {
   
 }
 
+getGodSkins <- function(god_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getgodskins"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, god_id, "1", sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getGodRecommendedItems <- function(god_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getgodrecommendeditems"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, god_id, "1", sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getItems <- function(token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getitems"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, "1", sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
 #### Players and Playerids ####
 
 getPlayer <- function(player, token, dev_id, session, portal_id = "10", output_type = "json") {
@@ -251,6 +300,42 @@ getMatchHistory <- function(player_id, token, dev_id, session, output_type = "js
   return(response)
 }
 
+searchPlayers <- function(search_string, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "searchplayers"
+  signature <- getsignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, search_string, sep = "/")
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getQueueStats <- function(queue, player_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getqueuestats"
+  signature <- getsignature(dev_id, endpoint, token, time_stamp)
+  
+  queues <- c("445", "426", "448", "435", "466", "434", "459")
+  names(queues) <- c("assault", "conquest", "joust", "arena", "clash", "motd", "siege")
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player_id, queues[queue], 
+                         sep = "/")
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
 #### Match Info ####
 
 getMatchIdsByQueue <- function(queue, token, dev_id, session, date, hour, minute = NULL, output_type = "json") {
@@ -272,7 +357,7 @@ getMatchIdsByQueue <- function(queue, token, dev_id, session, date, hour, minute
   }
   
   base_url <- "http://api.smitegame.com/smiteapi.svc"
-  method_string <- paste(base_url, paste0("getmatchidsbyqueue", output_type), 
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
                          dev_id, signature, session, time_stamp, queues[queue], date, paste0(hour, minute), 
                          sep = "/")
   response <- fromJSON(method_string)
@@ -320,25 +405,147 @@ getMatchDetailsBatch <- function(match_id_vec, token, dev_id, session, output_ty
 
 #### Leagues, Seasons, and Rounds ####
 #### Team Info ####
+
+searchTeams <- function(search_string, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "searchteams"
+  signature <- getsignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, search_string, sep = "/")
+  response <- fromJSON(method_string)
+  
+  return(response)
+}
+
+getTeamDetails <- function(clan_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getteamdetails"
+  signature <- getsignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, clan_id, sep = "/")
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getTeamPlayers <- function(clan_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getteamplayers"
+  signature <- getsignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, clan_id, sep = "/")
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
 #### Other ####
 
+getGodLeaderboard <- function(queue, god_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getgodleaderboard"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  queues <- c("445", "426", "448", "435", "466", "434", "459")
+  names(queues) <- c("assault", "conquest", "joust", "arena", "clash", "motd", "siege")
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, god_id, queues[queue], sep = "/")
+  print(method_string)
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
 
-searchTeams <- function() {
+getPlayerStatus <- function(player_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getplayerstatus"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getFriends <- function(player_id, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getfriends"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player_id, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getPlayerIdByName <- function(player, token, dev_id, session, output_type = "json") {
+  
+  time_stamp <- getTimestamp()
+  
+  endpoint <- "getplayeridbyname"
+  signature <- getSignature(dev_id, endpoint, token, time_stamp)
+  
+  base_url <- "http://api.smitegame.com/smiteapi.svc"
+  method_string <- paste(base_url, paste0(endpoint, output_type), 
+                         dev_id, signature, session, time_stamp, player, sep = "/")
+  
+  response <- fromJSON(method_string)
+  
+  return(response)
+  
+}
+
+getMatchPlayerDetails <- function() {
   return(NULL)
 }
 
-getTeamDetails <- function() {
+getTopMatches <- function() {
   return(NULL)
 }
 
-getTeamPlayers <- function() {
+getLeagueLeaderboard <- function() {
   return(NULL)
 }
 
-getQueueStats <- function() {
+getLeagueSeasons <- function() {
   return(NULL)
 }
 
-searchPlayer <- function() {
+getMotd <- function() {
+  return(NULL)
+}
+
+getEsportsProLeagueDetails <- function() {
   return(NULL)
 }
