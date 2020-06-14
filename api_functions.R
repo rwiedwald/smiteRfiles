@@ -396,7 +396,6 @@ getMatchDetailsBatch <- function(match_id_vec, token, dev_id, session, output_ty
   base_url <- "http://api.smitegame.com/smiteapi.svc"
   method_string <- paste(base_url, paste0(endpoint, output_type), 
                          dev_id, signature, session, time_stamp, csv_match_id, sep = "/")
-  print(method_string)
   response <- fromJSON(method_string)
   
   return(response)
@@ -455,6 +454,8 @@ getTeamPlayers <- function(clan_id, token, dev_id, session, output_type = "json"
 
 #### Other ####
 
+
+#### Dev ####
 getGodLeaderboard <- function(queue, god_id, token, dev_id, session, output_type = "json") {
   
   time_stamp <- getTimestamp()
